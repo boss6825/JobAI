@@ -1,6 +1,6 @@
-from langchain.chat_models import ChatOpenAI
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 from os import getenv
 from dotenv import load_dotenv
 
@@ -9,22 +9,24 @@ load_dotenv()
 template = """Question: {question}
 Answer: Let's think step by step."""
 
-prompt = PromptTemplate(template=template, input_variables=["question"])
+prompt = PromptTemplate.from_template(template)
+
+headers = {
+    "HTTP-Referer": getenv("YOUR_SITE_URL"),
+    "X-Title": getenv("YOUR_SITE_NAME"),
+}
 
 llm = ChatOpenAI(
-  openai_api_key=getenv("OPENROUTER_API_KEY"),
-  openai_api_base=getenv("OPENROUTER_BASE_URL"),
-  model_name="<model_name>",
-  model_kwargs={
-    "headers": {
-      "HTTP-Referer": getenv("YOUR_SITE_URL"),
-      "X-Title": getenv("YOUR_SITE_NAME"),
-    }
-  },
+    api_key=getenv("OPENROUTER_API_KEY"),
+    base_url=getenv("OPENROUTER_BASE_URL"),
+    model="deepseek/deepseek-r1:free",
+    default_headers={k: v for k, v in headers.items() if v is not None},
 )
 
-llm_chain = LLMChain(prompt=prompt, llm=llm)
+output_parser = StrOutputParser()
 
-question = "What NFL team won the Super Bowl in the year Justin Beiber was born?"
+chain = prompt | llm | output_parser
 
-print(llm_chain.run(question))
+question = "yoo bro how are you doing , what model i am using?"
+
+print(chain.invoke({"question": question}))
