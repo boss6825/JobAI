@@ -30,3 +30,4 @@ chain = prompt | llm | output_parser
 question = "yoo bro how are you doing , what model i am using?"
 
 print(chain.invoke({"question": question}))
+print(llm.predict("what is the capital of France?"))
