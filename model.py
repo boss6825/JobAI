@@ -27,7 +27,7 @@ output_parser = StrOutputParser()
 
 chain = prompt | llm | output_parser
 
-question = "yoo bro how are you doing , what model i am using?"
+question = "yoo bro how are you doing , now tell me what was my last question to you"
 
 print(chain.invoke({"question": question}))
 print(llm.predict("what is the capital of France?"))
