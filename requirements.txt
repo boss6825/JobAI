@@ -1,4 +1,1 @@
-langchain[community]
-langchain-openai
-python-dotenv
-openai 
+google-genai==1.25.0
